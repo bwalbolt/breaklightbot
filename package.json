@@ -1,0 +1,21 @@
+{
+  "name": "devopsbot",
+  "version": "0.1.0",
+  "description": "slackbot to monitor various things that devops is interested in",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "dependencies": {
+    "express": "~4.9.x",
+    "coffee-script": "*",
+    "log": "*",
+    "bufferutil": "*",
+    "ws": "*",
+    "slack-client": "~1.4.0",
+    "emailjs": "~0.3.x"
+  },
+  "engines": {
+    "node": "~0.12.x"
+  }
+}
