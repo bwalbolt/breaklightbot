@@ -9,8 +9,8 @@
 
 var email   = require("emailjs");
 var emailserver  = email.server.connect({
-  user:    "app35920866@heroku.com", //process.env.MANDRILL_USERNAME, 
-  password:"hMYDpRd9NDBJdWjVuidloQ", //process.env.MANDRILL_APIKEY, 
+  user:    "app37559484@heroku.com", //process.env.MANDRILL_USERNAME, 
+  password:"gZJb8olzVNKJc5RdYJKbxQ", //process.env.MANDRILL_APIKEY, 
   host:    "smtp.mandrillapp.com", 
   port:    465,
   ssl:     true
