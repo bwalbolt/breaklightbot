@@ -1,7 +1,7 @@
 # slack-devopsbot
 A slackbot that handles automated JIRA ticket submission and tracks employee #praise
 
-You must invite this bot channels - it will listen on those channels and take appropriate actions
+You must invite this bot to channels - it will listen on those channels and take appropriate actions
 
 If the bot sees #ticket it will email helpdesk@352inc.com thus creating a JIRA ticket. The email will come FROM: the user who entered the text, so when JIRA creates the ticket it will send them an email confirmation with the ticket link & details.
 
