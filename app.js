@@ -150,7 +150,7 @@ var cleanPraiseText = function(messageText) { //accepts a string containing the 
           }, function(err, message) { console.log(err || message); });
         }
         
-        channel.send(user.profile.real_name + ' has praised ' + praisedUsers);
+        if (praisedUsers.length > 0) { channel.send(user.profile.real_name + ' has praised ' + praisedUsers); }
         return console.log("bot parsed: " + user.profile.real_name + ' has praised ' + praisedUsers + "\r\n" + cleanPraiseText(response));
 
       } else {
