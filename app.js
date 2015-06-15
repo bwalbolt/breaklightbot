@@ -139,38 +139,47 @@ var cleanPraiseText = function(messageText) { //accepts a string containing the 
         praisedUsers = praisedUsers.map(getUserJSON); //convert the array of userIds to an array of full user JSON objects
         praisedUsers = praisedUsers.map(getUserFullName); //convert the array of JSON users to an array of usernames
         
-        var emailTo = "condish@352inc.com, cgarcia@352inc.com, lclifton@352inc.com";
-/*
-        switch(channelName) {
-        	case '#tampa':
-        		emailTo = "cgarcia@352inc.com";
-        		break;
-        	case '#gainesville':
-        		emailTo = "condish@352inc.com";
-        		break;
-        	case '#atlanta':
-        		emailTo = "lclifton@352inc.com";
-        		break;
-        	case '#staff-chat':
-        		emailTo = "cgarcia@352inc.com, condish@352inc.com, lclifton@352inc.com"
-        		break;
-        }
-*/
+        if (praisedUsers.length > 0 && user.profile.real_name !== praisedUsers[0]) {
+          var emailTo = "condish@352inc.com, cgarcia@352inc.com, lclifton@352inc.com";
+  /*
+          switch(channelName) {
+          	case '#tampa':
+          		emailTo = "cgarcia@352inc.com";
+          		break;
+          	case '#gainesville':
+          		emailTo = "condish@352inc.com";
+          		break;
+          	case '#atlanta':
+          		emailTo = "lclifton@352inc.com";
+          		break;
+          	case '#staff-chat':
+          		emailTo = "cgarcia@352inc.com, condish@352inc.com, lclifton@352inc.com"
+          		break;
+          }
+  */
 
-        var index;
-        for (index = 0; index < praisedUsers.length; ++index) { //for each praised user, send an email out with the praise details
-          emailserver.send({
-            text:    user.profile.real_name + ' has praised ' + praisedUsers[index] + "\r\n" + cleanPraiseText(response), 
-            from:    user.profile.real_name + " <" + user.profile.email + ">",
-            to:      emailTo,
-            //cc:      "else <else@your-email.com>",
-            //bcc:      "else <else@your-email.com>",
-            subject: channelName + " #praise for " + praisedUsers[index]
-          }, function(err, message) { console.log(err || message); });
+          var index;
+          for (index = 0; index < praisedUsers.length; ++index) { //for each praised user, send an email out with the praise details
+            emailserver.send({
+              text:    user.profile.real_name + ' has praised ' + praisedUsers[index] + "\r\n" + cleanPraiseText(response), 
+              from:    user.profile.real_name + " <" + user.profile.email + ">",
+              to:      emailTo,
+              //cc:      "else <else@your-email.com>",
+              //bcc:      "else <else@your-email.com>",
+              subject: channelName + " #praise for " + praisedUsers[index]
+            }, function(err, message) { console.log(err || message); });
+          }
+          channel.send(user.profile.real_name + ' has praised ' + praisedUsers);
+          return console.log("bot parsed: " + user.profile.real_name + ' has praised ' + praisedUsers + "\r\n" + cleanPraiseText(response));
+        } else if (user.profile.real_name == praisedUsers[0]) {
+            channel.send(makeMention(user) + ': did you just try to praise yourself? Bad form!');
+            return console.log("bot parsed: " + user.profile.real_name + ' tried to #praise themself' + "\r\n" + cleanPraiseText(response));
+        }
+          else {
+            channel.send(makeMention(user) + ': were you trying to praise someone? No @user found in your message ');
+            return console.log("bot parsed: " + user.profile.real_name + ' said #praise but mentioned no users' + "\r\n" + cleanPraiseText(response));
         }
         
-        if (praisedUsers.length > 0) { channel.send(user.profile.real_name + ' has praised ' + praisedUsers); }
-        return console.log("bot parsed: " + user.profile.real_name + ' has praised ' + praisedUsers + "\r\n" + cleanPraiseText(response));
 
       } else {
         typeError = type !== 'message' ? "unexpected type " + type + "." : null;
