@@ -139,21 +139,23 @@ var cleanPraiseText = function(messageText) { //accepts a string containing the 
         praisedUsers = praisedUsers.map(getUserJSON); //convert the array of userIds to an array of full user JSON objects
         praisedUsers = praisedUsers.map(getUserFullName); //convert the array of JSON users to an array of usernames
         
-        var emailTo = "ecunningham@352inc.com, dpelton@352inc.com";
-        switch(channelName) {
-        	case 'tampa':
+        var emailTo = "condish@352inc.com, cgarcia@352inc.com, lclifton@352inc.com";
+/*
+        --switch(channelName) {
+        	case '#tampa':
         		emailTo = "cgarcia@352inc.com";
         		break;
-        	case 'gainesville':
+        	case '#gainesville':
         		emailTo = "condish@352inc.com";
         		break;
-        	case 'atlanta':
+        	case '#atlanta':
         		emailTo = "lclifton@352inc.com";
         		break;
-        	case 'staff-chat':
+        	case '#staff-chat':
         		emailTo = "cgarcia@352inc.com, condish@352inc.com, lclifton@352inc.com"
         		break;
         }
+*/
 
         var index;
         for (index = 0; index < praisedUsers.length; ++index) { //for each praised user, send an email out with the praise details
