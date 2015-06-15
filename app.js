@@ -141,7 +141,7 @@ var cleanPraiseText = function(messageText) { //accepts a string containing the 
         
         var emailTo = "condish@352inc.com, cgarcia@352inc.com, lclifton@352inc.com";
 /*
-        --switch(channelName) {
+        switch(channelName) {
         	case '#tampa':
         		emailTo = "cgarcia@352inc.com";
         		break;
