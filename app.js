@@ -163,7 +163,7 @@ var cleanPraiseText = function(messageText) { //accepts a string containing the 
             to:      emailTo,
             //cc:      "else <else@your-email.com>",
             //bcc:      "else <else@your-email.com>",
-            subject: praisedUsers[index]
+            subject: "#praise " + praisedUsers[index]
           }, function(err, message) { console.log(err || message); });
         }
         
