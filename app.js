@@ -172,11 +172,11 @@ var cleanPraiseText = function(messageText) { //accepts a string containing the 
           channel.send(user.profile.real_name + ' has praised ' + praisedUsers);
           return console.log("bot parsed: " + user.profile.real_name + ' has praised ' + praisedUsers + "\r\n" + cleanPraiseText(response));
         } else if (user.profile.real_name == praisedUsers[0]) {
-            channel.send(makeMention(user) + ': did you just try to praise yourself? Bad form!');
+            channel.send(user.profile.real_name + ': did you just try to praise yourself? Bad form!');
             return console.log("bot parsed: " + user.profile.real_name + ' tried to #praise themself' + "\r\n" + cleanPraiseText(response));
         }
           else {
-            channel.send(makeMention(user) + ': were you trying to praise someone? No @user found in your message ');
+            channel.send(user.profile.real_name + ': were you trying to praise someone? No @user found in your message ');
             return console.log("bot parsed: " + user.profile.real_name + ' said #praise but mentioned no users' + "\r\n" + cleanPraiseText(response));
         }
         
