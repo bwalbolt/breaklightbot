@@ -117,7 +117,7 @@ var cleanPraiseText = function(messageText) { //accepts a string containing the 
           //bcc:      "else <else@your-email.com>",
           subject: text
         }, function(err, message) { console.log(err || message); });
-        channel.send(user.profile.email + ', your ticket has been submitted a ticket to the DevOps backlog!');
+        channel.send(user.profile.email + ': your ticket has been submitted to the DevOps backlog!');
         return console.log(user.profile.email + ' submitted a ticket to the DevOps backlog! ticket text: ' + response);
       } else {
         typeError = type !== 'message' ? "unexpected type " + type + "." : null;
