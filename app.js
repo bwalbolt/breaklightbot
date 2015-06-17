@@ -50,6 +50,15 @@ var isPraise = function(messageText) {
     messageText.indexOf("#praise") !=-1;
 };
 
+//check for #parrot command to tell bot what channel to say into and what to say in it
+var isParrot = function(message) {
+  return message.text &&
+    message.text.length > 9 &&
+    message.text.substring(0,8) == "#parrot #" &&
+    slack.getUserByID(message.user) &&
+    slack.getUserByID(message.user).name == "ecunningham";
+  }
+
 var cleanPraiseText = function(messageText) { //accepts a string containing the initial user's entire praise text. replaces slack userids in the text with actual names
   var praiseText = messageText.split("<@"); //split text on <@ since that is what slack userid links start with
   for (index = 1; index < praiseText.length; ++index) { //skip the first element, which will just be text. the rest of the elements will start with a userid, so let's replace those userids with full names
@@ -105,7 +114,7 @@ var cleanPraiseText = function(messageText) { //accepts a string containing the 
     channelName = (channel != null ? channel.is_channel : void 0) ? '#' : '';
     channelName = channelName + (channel ? channel.name : 'UNKNOWN_CHANNEL');
     
-    if (isTicket(message.text)) {
+    if (isTicket(message.text)) { //email submission to helpdesk@352inc.com to create a devops ticket in JIRA
       console.log("Received: " + type + " " + channelName + " " + userName + " " + ts + " \"" + text + "\"");
       if (type === 'message' && (text != null) && (channel != null)) {
         response = text;
@@ -129,7 +138,10 @@ var cleanPraiseText = function(messageText) { //accepts a string containing the 
         return console.log("@" + slack.self.name + " could not respond. " + errors);
       }
     }
-    if (isPraise(message.text)) {
+    if (isParrot(message)) { //
+      return console.log(message);
+    }
+    if (isPraise(message.text)) { //email praise details to courtney, linday, and christa, one email per user praised
       console.log("Received: " + type + " " + channelName + " " + userName + " " + ts + " \"" + text + "\"");
       if (type === 'message' && (text != null) && (channel != null)) {
         response = text;
