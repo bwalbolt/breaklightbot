@@ -53,8 +53,8 @@ var isPraise = function(messageText) {
 //check for #parrot command to tell bot what channel to say into and what to say in it
 var isParrot = function(message) {
   return message.text &&
-    message.text.length > 9 &&
-    message.text.substring(0,8) == "#parrot #" &&
+    message.text.length > 21 &&
+    message.text.substring(0,10) == "#parrot <#" &&
     slack.getUserByID(message.user) &&
     slack.getUserByID(message.user).name == "ecunningham";
   }
@@ -138,8 +138,17 @@ var cleanPraiseText = function(messageText) { //accepts a string containing the 
         return console.log("@" + slack.self.name + " could not respond. " + errors);
       }
     }
-    if (isParrot(message)) { //
-      return console.log(message);
+    if (isParrot(message)) { //parrot some text into a channel of the user's choice
+      parrotChannelId = message.text.substring(10,19); //get the channelid from the beginning of the message
+      parrotChannel = slack.getChannelGroupOrDMByID(parrotChannelId); //convert the channelid into a channel object
+      if (parrotChannel && parrotChannel.name && parrotChannel.is_member) { //error handling and make sure bot is in the channel
+        parrotChannel.send(message.text.substring(21));
+        return console.log(userName + " told me to #parrot into channel #" + parrotChannel.name + ": " + message.text.substring(21));
+      } else if (parrotChannel && parrotChannel.name && !parrotChannel.is_member) {
+        return console.log("I'm not in channel #" + parrotChannel.name + "! " + userName + " gave an illegal command: " + message.text);
+      } else {
+        return console.log(userName + " gave an illegal command: " + message.text);
+      }
     }
     if (isPraise(message.text)) { //email praise details to courtney, linday, and christa, one email per user praised
       console.log("Received: " + type + " " + channelName + " " + userName + " " + ts + " \"" + text + "\"");
