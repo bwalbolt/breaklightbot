@@ -165,7 +165,8 @@ var cleanPraiseText = function(messageText) { //accepts a string containing the 
     	dieRoll = Math.floor((Math.random() * dieSize) + 1);
     	isCrit = '';
     	if (dieRoll == dieSize) {isCrit = ' CRITICAL HIT!';}
-    	channel.send(userName + ' rolled ' + dieRoll + ' on a ' + dieSize + ' sided die.' + isCrit );
+    	channel.send(userName + ' rolled ' + dieRoll + ' on a ' + dieSize + ' sided die.' + isCrit);
+      return console.log(userName + ' rolled ' + dieRoll + ' on a ' + dieSize + ' sided die.' + isCrit);
     }
 
     if (isPraise(message.text.toLowerCase())) { //email praise details to courtney, linday, and christa, one email per user praised
