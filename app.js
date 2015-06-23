@@ -50,6 +50,14 @@ var isPraise = function(messageText) {
     messageText.indexOf("#praise") !=-1;
 };
 
+//check for #roll to see if this is a dice rolling command
+var isRoll = function(messageText) {
+  return messageText &&
+    messageText.length > 6 &&
+    messageText.substring(0,6) == "#roll " &&
+    !isNaN(parseInt(messageText.substring(6)));
+};
+
 //check for #parrot command to tell bot what channel to say into and what to say in it
 var isParrot = function(message) {
   return message.text &&
@@ -138,6 +146,7 @@ var cleanPraiseText = function(messageText) { //accepts a string containing the 
         return console.log("@" + slack.self.name + " could not respond. " + errors);
       }
     }
+    
     if (isParrot(message)) { //parrot some text into a channel of the user's choice
       parrotChannelId = message.text.substring(10,19); //get the channelid from the beginning of the message
       parrotChannel = slack.getChannelGroupOrDMByID(parrotChannelId); //convert the channelid into a channel object
@@ -150,6 +159,15 @@ var cleanPraiseText = function(messageText) { //accepts a string containing the 
         return console.log(userName + " gave an illegal command: " + message.text);
       }
     }
+
+    if (isRoll(message.text)) { //roll the dice!
+    	dieSize = parseInt(message.text.substring(6));
+    	dieRoll = Math.floor((Math.random() * dieSize) + 1);
+    	isCrit = '';
+    	if (dieRoll == dieSize) {isCrit = ' CRITICAL HIT!';}
+    	channel.send(userName + ' rolled ' + dieRoll + ' on a ' + dieSize + ' sided die.' + isCrit );
+    }
+
     if (isPraise(message.text)) { //email praise details to courtney, linday, and christa, one email per user praised
       console.log("Received: " + type + " " + channelName + " " + userName + " " + ts + " \"" + text + "\"");
       if (type === 'message' && (text != null) && (channel != null)) {
