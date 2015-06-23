@@ -122,7 +122,7 @@ var cleanPraiseText = function(messageText) { //accepts a string containing the 
     channelName = (channel != null ? channel.is_channel : void 0) ? '#' : '';
     channelName = channelName + (channel ? channel.name : 'UNKNOWN_CHANNEL');
     
-    if (isTicket(message.text)) { //email submission to helpdesk@352inc.com to create a devops ticket in JIRA
+    if (isTicket(message.text.toLowerCase())) { //email submission to helpdesk@352inc.com to create a devops ticket in JIRA
       console.log("Received: " + type + " " + channelName + " " + userName + " " + ts + " \"" + text + "\"");
       if (type === 'message' && (text != null) && (channel != null)) {
         response = text;
@@ -160,7 +160,7 @@ var cleanPraiseText = function(messageText) { //accepts a string containing the 
       }
     }
 
-    if (isRoll(message.text)) { //roll the dice!
+    if (isRoll(message.text.toLowerCase())) { //roll the dice!
     	dieSize = parseInt(message.text.substring(6));
     	dieRoll = Math.floor((Math.random() * dieSize) + 1);
     	isCrit = '';
@@ -168,7 +168,7 @@ var cleanPraiseText = function(messageText) { //accepts a string containing the 
     	channel.send(userName + ' rolled ' + dieRoll + ' on a ' + dieSize + ' sided die.' + isCrit );
     }
 
-    if (isPraise(message.text)) { //email praise details to courtney, linday, and christa, one email per user praised
+    if (isPraise(message.text.toLowerCase())) { //email praise details to courtney, linday, and christa, one email per user praised
       console.log("Received: " + type + " " + channelName + " " + userName + " " + ts + " \"" + text + "\"");
       if (type === 'message' && (text != null) && (channel != null)) {
         response = text;
