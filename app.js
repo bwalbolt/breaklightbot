@@ -23,12 +23,18 @@ var makeMention = function(userId) {
 
 //accepts a slack userid and returns their JSON user object
 var getUserJSON = function(userId) {
-  return slack.getUserByID(userId);
+  if (userId) {
+    return slack.getUserByID(userId);
+  }
+  return null;
 }
 
 //accepts a slack user JSON object and returns their full name
 var getUserFullName = function(user) {
-  return user.profile.real_name;
+  if (user) {
+    return user.profile.real_name;
+  }
+  return null;
 }
 
 //drops > and everything after it from a string. used to clean up our user arrays later on
@@ -173,7 +179,7 @@ var cleanPraiseText = function(messageText) { //accepts a string containing the 
       console.log("Received: " + type + " " + channelName + " " + userName + " " + ts + " \"" + text + "\"");
       if (type === 'message' && (text != null) && (channel != null)) {
         response = text;
-        var praisedUsers = response.split("@"); //split text on @ since that will directly preceed userIDs
+        var praisedUsers = response.split("<@"); //split text on <@ since that will directly preceed userIDs
         praisedUsers.shift(); //remove the first element in the array since it will be text we don't care about
         praisedUsers = praisedUsers.map(trimUserString); //remove trailing > and text from each item in the array so we are left with just an array of userids
         praisedUsers = praisedUsers.map(getUserJSON); //convert the array of userIds to an array of full user JSON objects
