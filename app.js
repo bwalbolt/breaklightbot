@@ -73,6 +73,15 @@ var isParrot = function(message) {
     slack.getUserByID(message.user).name == "ecunningham";
   }
 
+//sanitize & shorten email subject
+var cleanAndTrimSubject = function(emailSubject) {
+var newSubject = emailSubject.split("\n");
+newSubject = newSubject[0];
+newSubject = newSubject.replace("<http://", '');
+if (newSubject.length > 100) { newSubject = newSubject.substring(0, 100); }
+return newSubject;
+}
+
 var cleanPraiseText = function(messageText) { //accepts a string containing the initial user's entire praise text. replaces slack userids in the text with actual names
   var praiseText = messageText.split("<@"); //split text on <@ since that is what slack userid links start with
   for (index = 1; index < praiseText.length; ++index) { //skip the first element, which will just be text. the rest of the elements will start with a userid, so let's replace those userids with full names
@@ -138,7 +147,7 @@ var cleanPraiseText = function(messageText) { //accepts a string containing the 
           to:      "helpdesk@352inc.com",
           //cc:      "else <else@your-email.com>",
           //bcc:      "else <else@your-email.com>",
-          subject: text
+          subject: cleanAndTrimSubject(text)
         }, function(err, message) { console.log(err || message); });
         channel.send(user.profile.email + ': your ticket has been submitted to the DevOps backlog!');
         return console.log(user.profile.email + ' submitted a ticket to the DevOps backlog! ticket text: ' + response);
