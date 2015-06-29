@@ -75,11 +75,12 @@ var isParrot = function(message) {
 
 //sanitize & shorten email subject
 var cleanAndTrimSubject = function(emailSubject) {
-var newSubject = emailSubject.split("\n");
-newSubject = newSubject[0];
-newSubject = newSubject.replace("<http://", '');
-if (newSubject.length > 100) { newSubject = newSubject.substring(0, 100); }
-return newSubject;
+var trimmedSubject = emailSubject.split("\n");
+trimmedSubject = trimmedSubject[0];
+var regex = /[^0-9A-Za-z ]/;
+var cleanSubject = trimmedSubject.replace(regex, '');
+if (cleanSubject.length > 100) { cleanSubject = cleanSubject.substring(0, 100); }
+return cleanSubject;
 }
 
 var cleanPraiseText = function(messageText) { //accepts a string containing the initial user's entire praise text. replaces slack userids in the text with actual names
