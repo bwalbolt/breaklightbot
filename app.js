@@ -229,7 +229,8 @@ var cleanPraiseText = function(messageText) { //accepts a string containing the 
           for (index = 0; index < praisedUsers.length; ++index) { //for each praised user, send an email out with the praise details
             emailserver.send({
               text:    channelName + ": " + user.profile.real_name + ' has praised ' + praisedUsers[index] + "\r\n" + cleanPraiseText(response), 
-              from:    user.profile.real_name + " <" + user.profile.email + ">",
+              from: "devops bot <devops@352inc.com>",
+              //from:    user.profile.real_name + " <" + user.profile.email + ">",
               to:      emailTo,
               //cc:      "else <else@your-email.com>",
               //bcc:      "else <else@your-email.com>",
