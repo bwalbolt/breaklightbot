@@ -228,12 +228,12 @@ var cleanPraiseText = function(messageText) { //accepts a string containing the 
           var index;
           for (index = 0; index < praisedUsers.length; ++index) { //for each praised user, send an email out with the praise details
             emailserver.send({
-              text:    user.profile.real_name + ' has praised ' + praisedUsers[index] + "\r\n" + cleanPraiseText(response), 
+              text:    channelName + ": " + user.profile.real_name + ' has praised ' + praisedUsers[index] + "\r\n" + cleanPraiseText(response), 
               from:    user.profile.real_name + " <" + user.profile.email + ">",
               to:      emailTo,
               //cc:      "else <else@your-email.com>",
               //bcc:      "else <else@your-email.com>",
-              subject: channelName + " #praise for " + praisedUsers[index]
+              subject: "#praise for " + praisedUsers[index]
             }, function(err, message) { console.log(err || message); });
           }
           channel.send(user.profile.real_name + ' has praised ' + praisedUsers);
