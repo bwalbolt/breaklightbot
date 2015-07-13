@@ -94,7 +94,7 @@ var cleanPraiseText = function(messageText) { //accepts a string containing the 
   for (index = 1; index < praiseText.length; ++index) { //skip the first element, which will just be text. the rest of the elements will start with a userid, so let's replace those userids with full names
     praiseText[index] = " " + getUserFullName(getUserJSON(praiseText[index].substring(0,9))) + praiseText[index].substring(10);
   }
-  praiseText.join();
+  praiseText.join('');
   return praiseText;
 };
 
