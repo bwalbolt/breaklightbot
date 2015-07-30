@@ -203,6 +203,7 @@ var cleanPraiseText = function(messageText) { //accepts a string containing the 
         var praisedUsers = response.split("<@"); //split text on <@ since that will directly preceed userIDs
         praisedUsers.shift(); //remove the first element in the array since it will be text we don't care about
         praisedUsers = praisedUsers.map(trimUserString); //remove trailing > and text from each item in the array so we are left with just an array of userids
+        praisedUsers = praisedUsers.reduce(function(a,b){if(a.indexOf(b)<0)a.push(b);return a;},[]); //remove duplicates
         praisedUsers = praisedUsers.map(getUserJSON); //convert the array of userIds to an array of full user JSON objects
         praisedUsers = praisedUsers.map(getUserFullName); //convert the array of JSON users to an array of usernames
         
