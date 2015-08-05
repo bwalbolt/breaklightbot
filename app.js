@@ -208,7 +208,7 @@ var cleanPraiseText = function(messageText) { //accepts a string containing the 
         praisedUsers = praisedUsers.map(getUserFullName); //convert the array of JSON users to an array of usernames
         
         if (praisedUsers.length > 0 && user.profile.real_name !== praisedUsers[0]) {
-          var emailTo = "condish@352inc.com, cgarcia@352inc.com, lclifton@352inc.com";
+          var emailTo = "ecunningham@352inc.com, cgarcia@352inc.com, lclifton@352inc.com";
   /*
           switch(channelName) {
           	case '#tampa':
