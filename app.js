@@ -89,13 +89,12 @@ var cleanAndTrimSubject = function(emailSubject) {
   return trimmedSubject;
 }
 
-var cleanPraiseText = function(messageText) { //accepts a string containing the initial user's entire praise text. replaces slack userids in the text with actual names
-  var praiseText = messageText.split("<@"); //split text on <@ since that is what slack userid links start with
-  for (index = 1; index < praiseText.length; ++index) { //skip the first element, which will just be text. the rest of the elements will start with a userid, so let's replace those userids with full names
-    praiseText[index] = " " + getUserFullName(getUserJSON(praiseText[index].substring(0,9))) + praiseText[index].substring(10);
+var cleanUserText = function(messageText) { //accepts a string containing the initial user's entire message text. replaces slack userids in the text with actual names
+  var cleanText = messageText.split("<@"); //split text on <@ since that is what slack userid links start with
+  for (index = 1; index < cleanText.length; ++index) { //skip the first element, which will just be text. the rest of the elements will start with a userid, so let's replace those userids with full names
+    cleanText[index] = " " + getUserFullName(getUserJSON(cleanText[index].substring(0,9))) + cleanText[index].substring(10);
   }
-  praiseText.join('');
-  return praiseText;
+  return cleanText.join('');
 };
 
 //open the slack connection
@@ -152,14 +151,14 @@ var cleanPraiseText = function(messageText) { //accepts a string containing the 
     if (isTicket(message.text)) { //email submission to helpdesk@352inc.com to create a devops ticket in JIRA
       console.log("Received: " + type + " " + channelName + " " + userName + " " + ts + " \"" + text + "\"");
       if (type === 'message' && (text != null) && (channel != null)) {
-        response = text;
+        response = cleanUserText(text);
         emailserver.send({
           text:    response, 
           from:    user.real_name + " <" + user.profile.email + ">",
           to:      "helpdesk@352inc.com",
           //cc:      "else <else@your-email.com>",
           //bcc:      "else <else@your-email.com>",
-          subject: cleanAndTrimSubject(text)
+          subject: cleanAndTrimSubject(response)
         }, function(err, message) { console.log(err || message); });
         channel.send(user.profile.email + ': your ticket has been submitted to the DevOps backlog!');
         return console.log(user.profile.email + ' submitted a ticket to the DevOps backlog! ticket text: ' + response);
@@ -229,7 +228,7 @@ var cleanPraiseText = function(messageText) { //accepts a string containing the 
           var index;
           for (index = 0; index < praisedUsers.length; ++index) { //for each praised user, send an email out with the praise details
             emailserver.send({
-              text:    channelName + ": " + user.profile.real_name + ' has praised ' + praisedUsers[index] + "\r\n" + cleanPraiseText(response), 
+              text:    channelName + ": " + user.profile.real_name + ' has praised ' + praisedUsers[index] + "\r\n" + cleanUserText(response), 
               from: "devops bot <devops@352inc.com>",
               //from:    user.profile.real_name + " <" + user.profile.email + ">",
               to:      emailTo,
@@ -239,14 +238,14 @@ var cleanPraiseText = function(messageText) { //accepts a string containing the 
             }, function(err, message) { console.log(err || message); });
           }
           channel.send(user.profile.real_name + ' has praised ' + praisedUsers);
-          return console.log("bot replied: " + user.profile.real_name + ' has praised ' + praisedUsers + "\r\n" + cleanPraiseText(response));
+          return console.log("bot replied: " + user.profile.real_name + ' has praised ' + praisedUsers + "\r\n" + cleanUserText(response));
         } else if (user.profile.real_name == praisedUsers[0]) {
             channel.send(user.profile.real_name + ': did you just try to praise yourself? Bad form!');
-            return console.log("bot replied: " + user.profile.real_name + ': did you just try to praise yourself? Bad form!' + "\r\n" + cleanPraiseText(response));
+            return console.log("bot replied: " + user.profile.real_name + ': did you just try to praise yourself? Bad form!' + "\r\n" + cleanUserText(response));
         }
           else {
             channel.send(user.profile.real_name + ': were you trying to praise someone? No @user found in your message ');
-            return console.log("bot replied: " + user.profile.real_name + ': were you trying to praise someone? No @user found in your message ' + "\r\n" + cleanPraiseText(response));
+            return console.log("bot replied: " + user.profile.real_name + ': were you trying to praise someone? No @user found in your message ' + "\r\n" + cleanUserText(response));
         }
         
 
