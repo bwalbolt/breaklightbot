@@ -53,11 +53,11 @@ var isTicket = function(messageText) {
 };
 
 //check for #praise to see if this is user praise
-var isPraise = function(messageText) {
-  return messageText &&
-    messageText.length > 9 &&
-    messageText.toLowerCase().indexOf("#praise") !=-1;
-};
+//var isPraise = function(messageText) {
+//  return messageText &&
+//    messageText.length > 9 &&
+//    messageText.toLowerCase().indexOf("#praise") !=-1;
+//};
 
 //check for #roll to see if this is a dice rolling command
 var isRoll = function(messageText) {
@@ -195,6 +195,7 @@ var cleanUserText = function(messageText) { //accepts a string containing the in
       return console.log(userName + ' rolled ' + dieRoll + ' on a ' + dieSize + ' sided die.' + isCrit);
     }
 
+ /*  
     if (isPraise(message.text)) { //email praise details to courtney, linday, and christa, one email per user praised
       console.log("Received: " + type + " " + channelName + " " + userName + " " + ts + " \"" + text + "\"");
       if (type === 'message' && (text != null) && (channel != null)) {
@@ -225,6 +226,7 @@ var cleanUserText = function(messageText) { //accepts a string containing the in
           }
   */
 
+ /*
           var index;
           for (index = 0; index < praisedUsers.length; ++index) { //for each praised user, send an email out with the praise details
             emailserver.send({
@@ -247,7 +249,7 @@ var cleanUserText = function(messageText) { //accepts a string containing the in
             channel.send(user.profile.real_name + ': were you trying to praise someone? No @user found in your message ');
             return console.log("bot replied: " + user.profile.real_name + ': were you trying to praise someone? No @user found in your message ' + "\r\n" + cleanUserText(response));
         }
-        
+ */       
 
       } else {
         typeError = type !== 'message' ? "unexpected type " + type + "." : null;
