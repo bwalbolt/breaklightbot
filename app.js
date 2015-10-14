@@ -249,7 +249,7 @@ var cleanUserText = function(messageText) { //accepts a string containing the in
             channel.send(user.profile.real_name + ': were you trying to praise someone? No @user found in your message ');
             return console.log("bot replied: " + user.profile.real_name + ': were you trying to praise someone? No @user found in your message ' + "\r\n" + cleanUserText(response));
         }
- */       
+        
 
       } else {
         typeError = type !== 'message' ? "unexpected type " + type + "." : null;
@@ -261,6 +261,9 @@ var cleanUserText = function(messageText) { //accepts a string containing the in
         return console.log("@" + slack.self.name + " could not respond. " + errors);
       }
     }
+  */
+
+
   });
 
   slack.on('error', function(error) {
