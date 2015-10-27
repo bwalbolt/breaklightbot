@@ -77,9 +77,9 @@ var isParrot = function(message) {
   }
 
 //check for #352culture tag and notify mcushing
-var isCulture = function(message) {
-  return message.text &&
-    message.text.length > 12 &&
+var isCulture = function(messageText) {
+  return messageText &&
+    messageText.length > 12 &&
     messageText.toLowerCase().indexOf("#352culture") !=-1;
   }
 
