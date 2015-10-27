@@ -76,6 +76,13 @@ var isParrot = function(message) {
     slack.getUserByID(message.user).name == "ecunningham";
   }
 
+//check for #352culture tag and notify mcushing
+var isCulture = function(message) {
+  return message.text &&
+    message.text.length > 12 &&
+    messageText.toLowerCase().indexOf("#352culture") !=-1;
+  }
+
 //sanitize & shorten email subject
 var cleanAndTrimSubject = function(emailSubject) {
   var trimmedSubject = emailSubject.split("\n");
@@ -162,6 +169,31 @@ var cleanUserText = function(messageText) { //accepts a string containing the in
         }, function(err, message) { console.log(err || message); });
         channel.send(user.profile.email + ': your ticket has been submitted to the DevOps backlog!');
         return console.log(user.profile.email + ' submitted a ticket to the DevOps backlog! ticket text: ' + response);
+      } else {
+        typeError = type !== 'message' ? "unexpected type " + type + "." : null;
+        textError = text == null ? 'text was undefined.' : null;
+        channelError = channel == null ? 'channel was undefined.' : null;
+        errors = [typeError, textError, channelError].filter(function(element) {
+          return element !== null;
+        }).join(' ');
+        return console.log("@" + slack.self.name + " could not respond. " + errors);
+      }
+    }
+
+    if (isCulture(message.text)) { //email & slack mention to mcushing@352inc.com
+      console.log("Received: " + type + " " + channelName + " " + userName + " " + ts + " \"" + text + "\"");
+      if (type === 'message' && (text != null) && (channel != null)) {
+        response = cleanUserText(text);
+        emailserver.send({
+          text:    response, 
+          from:    user.real_name + " <" + user.profile.email + ">",
+          to:      "mcushing@352inc.com",
+          //cc:      "else <else@your-email.com>",
+          //bcc:      "else <else@your-email.com>",
+          subject: '#352culture slack mention'
+        }, function(err, message) { console.log(err || message); });
+        //channel.send(user.profile.email + ': your #352culture has been submitted to the DevOps backlog!');
+        return console.log(user.profile.email + ' mentioned #352culture! text: ' + response);
       } else {
         typeError = type !== 'message' ? "unexpected type " + type + "." : null;
         textError = text == null ? 'text was undefined.' : null;
