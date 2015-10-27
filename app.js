@@ -192,7 +192,8 @@ var cleanUserText = function(messageText) { //accepts a string containing the in
           //bcc:      "else <else@your-email.com>",
           subject: '#352culture slack mention'
         }, function(err, message) { console.log(err || message); });
-        //channel.send(user.profile.email + ': your #352culture has been submitted to the DevOps backlog!');
+        mcushing = slack.getChannelGroupOrDMByID('D0DA832NM'); //lookup the direct message channel for mcushing:devopsbot conversation
+        mcushing.send(user.profile.email + 'has tagged #352culture! ' + response);
         return console.log(user.profile.email + ' mentioned #352culture! text: ' + response);
       } else {
         typeError = type !== 'message' ? "unexpected type " + type + "." : null;
