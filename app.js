@@ -223,7 +223,9 @@ var cleanUserText = function(messageText) { //accepts a string containing the in
     	dieSize = parseInt(message.text.substring(6));
     	dieRoll = Math.floor((Math.random() * dieSize) + 1);
     	isCrit = '';
-    	if (dieRoll == dieSize) {isCrit = ' CRITICAL HIT!';}
+    	if (dieRoll == dieSize) {isCrit = ' CRITICAL HIT!';} 
+    	else if (dieRoll == '1') {isCrit = ' CRITICAL FAILURE!';}
+
     	channel.send(userName + ' rolled ' + dieRoll + ' on a ' + dieSize + ' sided die.' + isCrit);
       return console.log(userName + ' rolled ' + dieRoll + ' on a ' + dieSize + ' sided die.' + isCrit);
     }
