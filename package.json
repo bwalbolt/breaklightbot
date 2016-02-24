@@ -13,7 +13,7 @@
     "bufferutil": "*",
     "ws": "*",
     "slack-client": "~1.4.0",
-    "emailjs": "~0.3.x"
+    "sendgrid": "1.0.4"
   },
   "engines": {
     "node": "~0.12.x"

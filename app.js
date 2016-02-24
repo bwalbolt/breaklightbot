@@ -6,14 +6,7 @@
   autoReconnect = true;
   autoMark = true;
   slack = new Slack(token, autoReconnect, autoMark);
-  email   = require("emailjs");
-  emailserver  = email.server.connect({
-	  user:    "app37559484@heroku.com", //process.env.MANDRILL_USERNAME, 
-	  password:"gZJb8olzVNKJc5RdYJKbxQ", //process.env.MANDRILL_APIKEY, 
-	  host:    "smtp.mandrillapp.com", 
-	  port:    465,
-	  ssl:     true
-  });
+  var emailserver  = require('sendgrid')(process.env.SENDGRID_USERNAME, process.env.SENDGRID_PASSWORD);
 
 //***********
 //here there be functions...
