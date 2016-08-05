@@ -46,11 +46,11 @@ var isTicket = function(messageText) {
 };
 
 //check for #praise to see if this is user praise
-//var isPraise = function(messageText) {
-//  return messageText &&
-//    messageText.length > 9 &&
-//    messageText.toLowerCase().indexOf("#praise") !=-1;
-//};
+var isPraise = function(messageText) {
+  return messageText &&
+    messageText.length > 9 &&
+    messageText.toLowerCase().indexOf("#praise") !=-1;
+};
 
 //check for #roll to see if this is a dice rolling command
 var isRoll = function(messageText) {
@@ -290,6 +290,27 @@ var cleanUserText = function(messageText) { //accepts a string containing the in
       }
     }
   */
+
+
+    if (isPraise(message.text)) { //remind people to use /praise instead
+      console.log("Received: " + type + " " + channelName + " " + userName + " " + ts + " \"" + text + "\"");
+      if (type === 'message' && (text != null) && (channel != null)) {
+        response = text;
+          channel.send(user.profile.real_name + ' probably meant to /praise someone...');
+          return console.log("bot replied: " + user.profile.real_name + ' probably meant to praise someone... ');
+      }
+        
+
+      } else {
+        typeError = type !== 'message' ? "unexpected type " + type + "." : null;
+        textError = text == null ? 'text was undefined.' : null;
+        channelError = channel == null ? 'channel was undefined.' : null;
+        errors = [typeError, textError, channelError].filter(function(element) {
+          return element !== null;
+        }).join(' ');
+        return console.log("@" + slack.self.name + " could not respond. " + errors);
+      }
+    }
 
 
   });
