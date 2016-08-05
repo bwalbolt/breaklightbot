@@ -297,9 +297,7 @@ var cleanUserText = function(messageText) { //accepts a string containing the in
       if (type === 'message' && (text != null) && (channel != null)) {
         response = text;
           channel.send(user.profile.real_name + ' probably meant to /praise someone...');
-          return console.log("bot replied: " + user.profile.real_name + ' probably meant to praise someone... ');
-      }
-        
+          return console.log("bot replied: " + user.profile.real_name + ' probably meant to praise someone... ');        
 
       } else {
         typeError = type !== 'message' ? "unexpected type " + type + "." : null;
