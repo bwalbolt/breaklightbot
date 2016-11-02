@@ -204,6 +204,7 @@ var cleanUserText = function(messageText) { //accepts a string containing the in
       parrotChannel = slack.getChannelGroupOrDMByID(parrotChannelId); //convert the channelid into a channel object
       if (parrotChannel && parrotChannel.name && parrotChannel.is_member) { //error handling and make sure bot is in the channel
         parrotChannel.send(message.text.substring(21));
+        return console.log("message.text=" + message.text)
         return console.log(userName + " told me to #parrot into channel #" + parrotChannel.name + ": " + message.text.substring(21));
       } else if (parrotChannel && parrotChannel.name && !parrotChannel.is_member) {
         return console.log("I'm not in channel #" + parrotChannel.name + "! " + userName + " gave an illegal command: " + message.text);
