@@ -202,7 +202,7 @@ var cleanUserText = function(messageText) { //accepts a string containing the in
     if (isParrot(message)) { //parrot some text into a channel of the user's choice
       parrotChannelId = message.text.substring(10,19); //get the channelid from the beginning of the message
       parrotChannel = slack.getChannelGroupOrDMByID(parrotChannelId); //convert the channelid into a channel object
-      parrotText = trim(message.text.split(">")[1]);
+      parrotText = message.text.split(">")[1].trim(); //grab everything to the right of the first >, which indicates the end of the channelname
       if (parrotChannel && parrotChannel.name && parrotChannel.is_member) { //error handling and make sure bot is in the channel
         parrotChannel.send(parrotText);
         return console.log(userName + " told me to #parrot into channel #" + parrotChannel.name + ": " + parrotText);
