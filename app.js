@@ -41,14 +41,14 @@ var trimUserString = function(userstring) {
 //check for #ticket to see if this is a helpdesk ticket submission
 var isTicket = function(messageText) {
   return messageText &&
-    messageText.length > 9 &&
+    messageText.trim().length > 12 &&
     messageText.toLowerCase().indexOf("#ticket") !=-1;
 };
 
 //check for #praise to see if this is user praise
 var isPraise = function(messageText) {
   return messageText &&
-    messageText.length > 9 &&
+    messageText.trim().length > 12 &&
     messageText.toLowerCase().indexOf("#praise") !=-1;
 };
 
@@ -72,7 +72,7 @@ var isParrot = function(message) {
 //check for #352culture tag and notify mcushing
 var isCulture = function(messageText) {
   return messageText &&
-    messageText.length > 12 &&
+    messageText.trim().length > 12 &&
     messageText.toLowerCase().indexOf("#352culture") !=-1;
   }
 
