@@ -2,7 +2,7 @@
   //set up slack client & email provider
   var Slack, autoMark, autoReconnect, slack, token, email, emailserver;
   Slack = require('slack-client');
-  token = 'xoxb-159544488848-5Xd1w9ouHdqXYxbItr5vYZbU';
+  token = 'xoxb-159544488848-srqoXyE1H3eit8y7MdDNL0aP';
   autoReconnect = true;
   autoMark = true;
   slack = new Slack(token, autoReconnect, autoMark);
@@ -94,6 +94,12 @@ var isParrot = function(message) {
     type = message.type, ts = message.ts, text = message.text;
     channelName = (channel != null ? channel.is_channel : void 0) ? '#' : '';
     channelName = channelName + (channel ? channel.name : 'UNKNOWN_CHANNEL');
+
+    
+    if(channel && channel.is_im) {
+      console.log(message.text);
+    }
+    
     
     if (isParrot(message)) { //parrot some text into a channel of the user's choice
       parrotChannelId = message.text.substring(10,19); //get the channelid from the beginning of the message
@@ -120,10 +126,6 @@ var isParrot = function(message) {
       }
     }
 
-  });
-
-  slack.on('message.im', function(message) {
-    console.log(message);
   });
 
   slack.on('error', function(error) {
