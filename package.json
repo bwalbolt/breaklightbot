@@ -1,7 +1,7 @@
 {
-  "name": "devopsbot",
+  "name": "breaklight",
   "version": "0.1.0",
-  "description": "slackbot to monitor various things that devops is interested in",
+  "description": "slackbot to control the breaklight for breaks",
   "main": "app.js",
   "scripts": {
     "start": "node app.js"

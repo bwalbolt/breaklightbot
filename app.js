@@ -2,7 +2,7 @@
   //set up slack client & email provider
   var Slack, autoMark, autoReconnect, slack, token, email, emailserver;
   Slack = require('slack-client');
-  token = 'xoxb-6000646994-4dBtgkOW3iCOiwGTv4l8xRWI';
+  token = 'xoxb-159544488848-5Xd1w9ouHdqXYxbItr5vYZbU';
   autoReconnect = true;
   autoMark = true;
   slack = new Slack(token, autoReconnect, autoMark);
@@ -37,65 +37,14 @@ var getUserFullName = function(user) {
 var trimUserString = function(userstring) {
   return userstring.split(">")[0];
 }
- 
-//check for #ticket to see if this is a helpdesk ticket submission
-var isTicket = function(messageText) {
-  return messageText &&
-    messageText.trim().length > 12 &&
-    messageText.toLowerCase().indexOf("#ticket") !=-1;
-};
-
-//check for #praise to see if this is user praise
-var isPraise = function(messageText) {
-  return messageText &&
-    messageText.trim().length > 12 &&
-    messageText.toLowerCase().indexOf("#praise") !=-1;
-};
-
-//check for #roll to see if this is a dice rolling command
-var isRoll = function(messageText) {
-  return messageText &&
-    messageText.length > 6 &&
-    messageText.toLowerCase().substring(0,6) == "#roll " &&
-    !isNaN(parseInt(messageText.substring(6)));
-};
 
 //check for #parrot command to tell bot what channel to say into and what to say in it
 var isParrot = function(message) {
   return message.text &&
     message.text.length > 21 &&
     message.text.toLowerCase().substring(0,10) == "#parrot <#" &&
-    slack.getUserByID(message.user) &&
-    slack.getUserByID(message.user).name == "ecunningham";
+    slack.getUserByID(message.user);
   }
-
-//check for #352culture tag and notify mcushing
-var isCulture = function(messageText) {
-  return messageText &&
-    messageText.trim().length > 12 &&
-    messageText.toLowerCase().indexOf("#352culture") !=-1;
-  }
-
-//sanitize & shorten email subject
-var cleanAndTrimSubject = function(emailSubject) {
-  var trimmedSubject = emailSubject.split("\n");
-  trimmedSubject = trimmedSubject[0];
-  trimmedSubject = trimmedSubject.replace('#ticket ', '');
-  trimmedSubject = trimmedSubject.replace('<http://', '');
-  trimmedSubject = trimmedSubject.replace('<mailto:', '');
-  var regex = /[^0-9A-Za-z @\.\|]/g;
-  trimmedSubject = trimmedSubject.replace(regex, '');
-  if (trimmedSubject.length > 100) { trimmedSubject = trimmedSubject.substring(0, 100); }
-  return trimmedSubject;
-}
-
-var cleanUserText = function(messageText) { //accepts a string containing the initial user's entire message text. replaces slack userids in the text with actual names
-  var cleanText = messageText.split("<@"); //split text on <@ since that is what slack userid links start with
-  for (index = 1; index < cleanText.length; ++index) { //skip the first element, which will just be text. the rest of the elements will start with a userid, so let's replace those userids with full names
-    cleanText[index] = " " + getUserFullName(getUserJSON(cleanText[index].substring(0,9))) + cleanText[index].substring(10);
-  }
-  return cleanText.join('');
-};
 
 //open the slack connection
   slack.on('open', function() { 
@@ -130,8 +79,6 @@ var cleanUserText = function(messageText) { //accepts a string containing the in
     console.log("Welcome to Slack. You are @" + slack.self.name + " of " + slack.team.name);
     console.log('You are in: ' + channels.join(', '));
     console.log('As well as: ' + groups.join(', '));
-    messages = unreads === 1 ? 'message' : 'messages';
-    return console.log("You have " + unreads + " unread " + messages);
   });
 
 //********
@@ -148,63 +95,23 @@ var cleanUserText = function(messageText) { //accepts a string containing the in
     channelName = (channel != null ? channel.is_channel : void 0) ? '#' : '';
     channelName = channelName + (channel ? channel.name : 'UNKNOWN_CHANNEL');
     
-    if (isTicket(message.text)) { //email submission to helpdesk@352inc.com to create a devops ticket in JIRA
-      console.log("Received: " + type + " " + channelName + " " + userName + " " + ts + " \"" + text + "\"");
-      if (type === 'message' && (text != null) && (channel != null)) {
-        response = cleanUserText(text);
-        emailserver.send({
-          text:    response, 
-          from:    user.real_name + " <" + user.profile.email + ">",
-          to:      "helpdesk@352inc.com",
-          //cc:      "else <else@your-email.com>",
-          //bcc:      "else <else@your-email.com>",
-          subject: cleanAndTrimSubject(response)
-        }, function(err, message) { console.log(err || message); });
-        channel.send(user.profile.email + ': your ticket has been submitted to the DevOps backlog!');
-        return console.log(user.profile.email + ' submitted a ticket to the DevOps backlog! ticket text: ' + response);
-      } else {
-        typeError = type !== 'message' ? "unexpected type " + type + "." : null;
-        textError = text == null ? 'text was undefined.' : null;
-        channelError = channel == null ? 'channel was undefined.' : null;
-        errors = [typeError, textError, channelError].filter(function(element) {
-          return element !== null;
-        }).join(' ');
-        return console.log("@" + slack.self.name + " could not respond. " + errors);
-      }
-    }
-
-    if (isCulture(message.text)) { //email & slack mention to mcushing@352inc.com
-      console.log("Received: " + type + " " + channelName + " " + userName + " " + ts + " \"" + text + "\"");
-      if (type === 'message' && (text != null) && (channel != null)) {
-        response = cleanUserText(text);
-        emailserver.send({
-          text:    response, 
-          from:    user.real_name + " <" + user.profile.email + ">",
-          to:      "mcushing@352inc.com",
-          //cc:      "else <else@your-email.com>",
-          //bcc:      "else <else@your-email.com>",
-          subject: '#352culture slack mention'
-        }, function(err, message) { console.log(err || message); });
-        mcushing = slack.getChannelGroupOrDMByID('D0DA832NM'); //lookup the direct message channel for mcushing:devopsbot conversation
-        mcushing.send(user.profile.email + 'has tagged #352culture! ' + response);
-        return console.log(user.profile.email + ' mentioned #352culture! text: ' + response);
-      } else {
-        typeError = type !== 'message' ? "unexpected type " + type + "." : null;
-        textError = text == null ? 'text was undefined.' : null;
-        channelError = channel == null ? 'channel was undefined.' : null;
-        errors = [typeError, textError, channelError].filter(function(element) {
-          return element !== null;
-        }).join(' ');
-        return console.log("@" + slack.self.name + " could not respond. " + errors);
-      }
-    }
-    
     if (isParrot(message)) { //parrot some text into a channel of the user's choice
       parrotChannelId = message.text.substring(10,19); //get the channelid from the beginning of the message
       parrotChannel = slack.getChannelGroupOrDMByID(parrotChannelId); //convert the channelid into a channel object
       parrotText = message.text.split(">")[1].trim(); //grab everything to the right of the first >, which indicates the end of the channelname
       if (parrotChannel && parrotChannel.name && parrotChannel.is_member) { //error handling and make sure bot is in the channel
-        parrotChannel.send(parrotText);
+        switch (parrotText) {
+          case 'start':
+            parrotChannel.send("Started. The clock is ticking; the H is O!");
+            break;
+          case 'snooze':
+          case 'pause':
+            parrotChannel.send("Snoozed. Lights are annoying, amirite?");
+            break;
+          default:
+            parrotChannel.send(parrotText);
+        }
+
         return console.log(userName + " told me to #parrot into channel #" + parrotChannel.name + ": " + parrotText);
       } else if (parrotChannel && parrotChannel.name && !parrotChannel.is_member) {
         return console.log("I'm not in channel #" + parrotChannel.name + "! " + userName + " gave an illegal command: " + message.text);
@@ -213,105 +120,10 @@ var cleanUserText = function(messageText) { //accepts a string containing the in
       }
     }
 
-    if (isRoll(message.text)) { //roll the dice!
-    	dieSize = parseInt(message.text.substring(6));
-    	dieRoll = Math.floor((Math.random() * dieSize) + 1);
-    	isCrit = '';
-    	if (dieRoll == dieSize) {isCrit = ' CRITICAL HIT!';} 
-    	else if (dieRoll == '1') {isCrit = ' CRITICAL FAILURE!';}
+  });
 
-    	channel.send(userName + ' rolled ' + dieRoll + ' on a ' + dieSize + ' sided die.' + isCrit);
-      return console.log(userName + ' rolled ' + dieRoll + ' on a ' + dieSize + ' sided die.' + isCrit);
-    }
-
- /*  
-    if (isPraise(message.text)) { //email praise details to courtney, linday, and christa, one email per user praised
-      console.log("Received: " + type + " " + channelName + " " + userName + " " + ts + " \"" + text + "\"");
-      if (type === 'message' && (text != null) && (channel != null)) {
-        response = text;
-        var praisedUsers = response.split("<@"); //split text on <@ since that will directly preceed userIDs
-        praisedUsers.shift(); //remove the first element in the array since it will be text we don't care about
-        praisedUsers = praisedUsers.map(trimUserString); //remove trailing > and text from each item in the array so we are left with just an array of userids
-        praisedUsers = praisedUsers.reduce(function(a,b){if(a.indexOf(b)<0)a.push(b);return a;},[]); //remove duplicates
-        praisedUsers = praisedUsers.map(getUserJSON); //convert the array of userIds to an array of full user JSON objects
-        praisedUsers = praisedUsers.map(getUserFullName); //convert the array of JSON users to an array of usernames
-        
-        if (praisedUsers.length > 0 && user.profile.real_name !== praisedUsers[0]) {
-          var emailTo = "ecunningham@352inc.com, cgarcia@352inc.com, lclifton@352inc.com";
-  /*
-          switch(channelName) {
-          	case '#tampa':
-          		emailTo = "cgarcia@352inc.com";
-          		break;
-          	case '#gainesville':
-          		emailTo = "condish@352inc.com";
-          		break;
-          	case '#atlanta':
-          		emailTo = "lclifton@352inc.com";
-          		break;
-          	case '#staff-chat':
-          		emailTo = "cgarcia@352inc.com, condish@352inc.com, lclifton@352inc.com"
-          		break;
-          }
-  */
-
- /*
-          var index;
-          for (index = 0; index < praisedUsers.length; ++index) { //for each praised user, send an email out with the praise details
-            emailserver.send({
-              text:    channelName + ": " + user.profile.real_name + ' has praised ' + praisedUsers[index] + "\r\n" + cleanUserText(response), 
-              from: "devops bot <devops@352inc.com>",
-              //from:    user.profile.real_name + " <" + user.profile.email + ">",
-              to:      emailTo,
-              //cc:      "else <else@your-email.com>",
-              //bcc:      "else <else@your-email.com>",
-              subject: "#praise for " + praisedUsers[index]
-            }, function(err, message) { console.log(err || message); });
-          }
-          channel.send(user.profile.real_name + ' has praised ' + praisedUsers);
-          return console.log("bot replied: " + user.profile.real_name + ' has praised ' + praisedUsers + "\r\n" + cleanUserText(response));
-        } else if (user.profile.real_name == praisedUsers[0]) {
-            channel.send(user.profile.real_name + ': did you just try to praise yourself? Bad form!');
-            return console.log("bot replied: " + user.profile.real_name + ': did you just try to praise yourself? Bad form!' + "\r\n" + cleanUserText(response));
-        }
-          else {
-            channel.send(user.profile.real_name + ': were you trying to praise someone? No @user found in your message ');
-            return console.log("bot replied: " + user.profile.real_name + ': were you trying to praise someone? No @user found in your message ' + "\r\n" + cleanUserText(response));
-        }
-        
-
-      } else {
-        typeError = type !== 'message' ? "unexpected type " + type + "." : null;
-        textError = text == null ? 'text was undefined.' : null;
-        channelError = channel == null ? 'channel was undefined.' : null;
-        errors = [typeError, textError, channelError].filter(function(element) {
-          return element !== null;
-        }).join(' ');
-        return console.log("@" + slack.self.name + " could not respond. " + errors);
-      }
-    }
-  */
-
-
-    if (isPraise(message.text)) { //remind people to use /praise instead
-      console.log("Received: " + type + " " + channelName + " " + userName + " " + ts + " \"" + text + "\"");
-      if (type === 'message' && (text != null) && (channel != null)) {
-        response = text;
-          channel.send(user.profile.real_name + ' probably meant to /praise someone...');
-          return console.log("bot replied: " + user.profile.real_name + ' probably meant to praise someone... ');        
-
-      } else {
-        typeError = type !== 'message' ? "unexpected type " + type + "." : null;
-        textError = text == null ? 'text was undefined.' : null;
-        channelError = channel == null ? 'channel was undefined.' : null;
-        errors = [typeError, textError, channelError].filter(function(element) {
-          return element !== null;
-        }).join(' ');
-        return console.log("@" + slack.self.name + " could not respond. " + errors);
-      }
-    }
-
-
+  slack.on('message.im', function(message) {
+    console.log(message);
   });
 
   slack.on('error', function(error) {
