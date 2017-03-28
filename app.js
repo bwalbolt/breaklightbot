@@ -2,7 +2,7 @@
   //set up slack client & email provider
   var Slack, autoMark, autoReconnect, slack, token, email, emailserver;
   Slack = require('slack-client');
-  token = 'xoxb-159544488848-srqoXyE1H3eit8y7MdDNL0aP';
+  token = process.env.SlackToken; //'xoxb-159544488848-KM7CFbAbB3vrXOYQgNo8CJG2';
   autoReconnect = true;
   autoMark = true;
   slack = new Slack(token, autoReconnect, autoMark);
@@ -23,7 +23,7 @@ var getUserJSON = function(userId) {
     return slack.getUserByID(userId);
   }
   return null;
-}
+};
 
 //accepts a slack user JSON object and returns their full name
 var getUserFullName = function(user) {
@@ -31,12 +31,12 @@ var getUserFullName = function(user) {
     return user.profile.real_name;
   }
   return null;
-}
+};
 
 //drops > and everything after it from a string. used to clean up our user arrays later on
 var trimUserString = function(userstring) {
   return userstring.split(">")[0];
-}
+};
 
 //check for #parrot command to tell bot what channel to say into and what to say in it
 var isParrot = function(message) {
@@ -44,7 +44,7 @@ var isParrot = function(message) {
     message.text.length > 21 &&
     message.text.toLowerCase().substring(0,10) == "#parrot <#" &&
     slack.getUserByID(message.user);
-  }
+  };
 
 //open the slack connection
   slack.on('open', function() { 
