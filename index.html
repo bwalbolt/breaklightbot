@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script>
+
+document.onkeydown = function(e){
+    e = e || window.event;
+    var key = e.which || e.keyCode;
+    
+    if(key===66){ // 'b'
+    	document.getElementById('blue').className = "on";
+    	document.getElementById('red').style.display = "";
+    }
+    if(key===82){ // 'r'
+    	document.getElementById('red').className = "on";
+    }
+    if(key===85){ // 'u'
+    	document.getElementById('urgent').className = "on";
+    }
+    if(key===83 || key===79){ // 's or o'
+        document.getElementById('blue').className = "";
+	    document.getElementById('red').className = "";
+	    document.getElementById('red').style.display = "none";
+	    document.getElementById('urgent').className = "";
+    }
+}
+
+</script>
+<style>
+html, body {
+	margin: 0;
+	padding: 0;
+	height: 100%;
+	background: black;
+}
+div {
+	position: fixed;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	opacity: 0;
+}
+div.on {
+	display: block;
+	opacity: 1;
+}
+#blue {
+	transition: opacity 2s ease;
+	background: blue;
+	z-index: 1;
+}
+#red {
+	transition: opacity 120s ease;
+	background: red;
+	z-index: 2;
+}
+#urgent {
+	transition: opacity 2s ease;
+	background: red;
+	z-index: 3;
+}
+</style>
+</head>
+<body>
+<div id="blue"></div>
+<div id="red"></div>
+<div id="urgent"></div>
+</body>
+</html>
